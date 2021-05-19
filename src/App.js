@@ -32,16 +32,17 @@ class App extends Component {
   };
   
   deleteHandler = (cardId) => {
-    
+    const cardNumber =this.state.cardNumber-1;
     const files = [...this.state.files];
     files[this.state.currentFile].cards=files[this.state.currentFile].cards.filter((c)=> c.id !==cardId);
-    this.setState({ files });
+    this.setState({ files,cardNumber });
   };
+
   resetHandler = (cardId) => {
     const files = [...this.state.files];
-    files[this.state.currentFile].cards[cardId-1].textFieldValue="";
+    files[this.state.currentFile].cards[cardId].textFieldValue="";
     this.setState({ files });
-  }; si
+  }; 
 
   pageHandeler = (page) => {
     this.setState({ currentPage: page });
@@ -53,7 +54,10 @@ class App extends Component {
       const files = [...this.state.files];
       const file = files[this.state.currentFile];
       const cards = [...this.state.files[this.state.currentFile].cards];
-      cards.splice(cards.indexOf(card)+1,0,{ id: cardNumber-1, value: "L" + (cardNumber-1), textFieldValue:'' });
+      var fix = cardNumber-1
+      while(file.cards.filter(el=>el.id==fix).length !== 0 )
+      fix++;
+      cards.splice(cards.indexOf(card)+1,0,{ id: fix, value: "L" + (fix), textFieldValue:'' });
       file.cards=cards;
       files.splice(this.state.currentFile,1,file);
       this.setState({ cardNumber, files });
@@ -61,7 +65,6 @@ class App extends Component {
   };
   fileHandler= (file)=>{
     const currentFile = file.id-1;
-    //alert("cuurentfile:"+currentFile+"  Numberof cards:"+file.cards.length);
     this.setState({currentFile, cardNumber: file.cards.length, currentPage: 1, rCard:{ id: 0, value: "L0", textFieldValue:'' } });
   };
 
@@ -82,25 +85,15 @@ class App extends Component {
 
 handleClickOutside=(event) => {
   if (event.target.id==="Notebody") {
-    /*const files = [...this.state.files];
-    const file = files[this.state.currentFile];
-    const cards = [...this.state.files[this.state.currentFile].cards];
-    const card=cards[cards.length-1];
-    const cardNumber = cards.length;
-    files[this.state.currentFile].cards.push({ id: cardNumber, value: "L" + (cardNumber) });
-    
-    this.setState({files});*/
-      //alert(event.target.id);
       const cardNumber = this.state.files[this.state.currentFile].cards.length + 1;
       const files = [...this.state.files];
       const file = files[this.state.currentFile];
       const cards = [...this.state.files[this.state.currentFile].cards];
-      //console.log(cards);
-      //console.log(this.state.rCard);
-      //const index = cards.indexOf(this.state.rCard)+1;
       const index= cards.findIndex((el) => el.id === this.state.rCard.id)+1;
-      //alert(index);
-      cards.splice(index,0,{ id: cardNumber-1, value: "L" + (cardNumber-1), textFieldValue:'' });
+      var fix = cardNumber-1
+      while(file.cards.filter(el=>el.id==fix).length !== 0 )
+      fix++;
+      cards.splice(index,0,{ id: fix, value: "L" + (fix), textFieldValue:'' });
       file.cards=cards;
       files.splice(this.state.currentFile,1,file);
       this.setState({ cardNumber, files });
@@ -108,11 +101,8 @@ handleClickOutside=(event) => {
 };
  handleVist = (card) => {
   const recentCard= card.id;
-  //recentCard=event.target.id;
-  //alert(recentCard);
-  this.setState({recentCard, rCard:card});
-  
- }
+  this.setState({recentCard, rCard:card}); 
+ };
   
   render() {
     const {
@@ -143,6 +133,8 @@ handleClickOutside=(event) => {
                 card={card}
                 onChange={this._handleTextFieldChange}
                 onClick={this.handleVist}
+                onDelete={this.deleteHandler}
+                onClear={this.resetHandler}
               />
             ))}
 
