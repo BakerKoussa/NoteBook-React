@@ -26,7 +26,8 @@ class App extends Component {
     pageSize: 5,
     currentPage: 1,
     cardNumber: 1,
-    currentFile:0
+    currentFile:0,
+    recentCard:0
   };
   
   deleteHandler = (cardId) => {
@@ -54,8 +55,6 @@ class App extends Component {
       cards.splice(cards.indexOf(card)+1,0,{ id: cardNumber-1, value: "L" + (cardNumber-1) });
       file.cards=cards;
       files.splice(this.state.currentFile,1,file);
-      //[...this.state.cards,{ id: cardNumber, value: "L" + cardNumber }];
-      //alert(card.id);
       this.setState({ cardNumber, files });
     }
   };
@@ -82,18 +81,32 @@ class App extends Component {
 
 handleClickOutside=(event) => {
   if (event.target.id==="Notebody") {
-    const files = [...this.state.files];
+    /*const files = [...this.state.files];
     const file = files[this.state.currentFile];
     const cards = [...this.state.files[this.state.currentFile].cards];
     const card=cards[cards.length-1];
     const cardNumber = cards.length;
     files[this.state.currentFile].cards.push({ id: cardNumber, value: "L" + (cardNumber) });
     
-    this.setState({files});
+    this.setState({files});*/
       //alert(event.target.id);
+      const cardNumber = this.state.files[this.state.currentFile].cards.length + 1;
+      const files = [...this.state.files];
+      const file = files[this.state.currentFile];
+      const cards = [...this.state.files[this.state.currentFile].cards];
+      cards.splice(this.state.recentCard+1,0,{ id: cardNumber-1, value: "L" + (cardNumber-1) });
+      file.cards=cards;
+      files.splice(this.state.currentFile,1,file);
+      this.setState({ cardNumber, files });
   }
 };
-
+ handleVist = (card) => {
+  const recentCard= card.id;
+  //recentCard=event.target.id;
+  alert(recentCard);
+  this.setState({recentCard});
+  
+ }
   
   render() {
     const {
@@ -123,6 +136,7 @@ handleClickOutside=(event) => {
                 onKeyPress={this.handleShiftEnter}
                 card={card}
                 onChange={this._handleTextFieldChange}
+                onClick={this.handleVist}
               />
             ))}
 
