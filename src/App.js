@@ -27,7 +27,8 @@ class App extends Component {
     currentPage: 1,
     cardNumber: 1,
     currentFile:0,
-    recentCard:0
+    recentCard:0,
+    rCard:{ id: 0, value: "L0", textFieldValue:'' }
   };
   
   deleteHandler = (cardId) => {
@@ -52,7 +53,7 @@ class App extends Component {
       const files = [...this.state.files];
       const file = files[this.state.currentFile];
       const cards = [...this.state.files[this.state.currentFile].cards];
-      cards.splice(cards.indexOf(card)+1,0,{ id: cardNumber-1, value: "L" + (cardNumber-1) });
+      cards.splice(cards.indexOf(card)+1,0,{ id: cardNumber-1, value: "L" + (cardNumber-1), textFieldValue:'' });
       file.cards=cards;
       files.splice(this.state.currentFile,1,file);
       this.setState({ cardNumber, files });
@@ -61,7 +62,7 @@ class App extends Component {
   fileHandler= (file)=>{
     const currentFile = file.id-1;
     //alert("cuurentfile:"+currentFile+"  Numberof cards:"+file.cards.length);
-    this.setState({currentFile, cardNumber: file.cards.length, currentPage: 1 });
+    this.setState({currentFile, cardNumber: file.cards.length, currentPage: 1, rCard:{ id: 0, value: "L0", textFieldValue:'' } });
   };
 
   _handleTextFieldChange= (e,card) => {
@@ -71,7 +72,7 @@ class App extends Component {
     const files= [...this.state.files];
     const index= cards.findIndex((el) => el.id === card.id);
     files[this.state.currentFile].cards[index]=card;
-    //console.log(files);
+    console.log(this.state.currentFile);
     //cards[index]=card;
     this.setState({
         files
@@ -94,7 +95,12 @@ handleClickOutside=(event) => {
       const files = [...this.state.files];
       const file = files[this.state.currentFile];
       const cards = [...this.state.files[this.state.currentFile].cards];
-      cards.splice(this.state.recentCard+1,0,{ id: cardNumber-1, value: "L" + (cardNumber-1) });
+      //console.log(cards);
+      //console.log(this.state.rCard);
+      //const index = cards.indexOf(this.state.rCard)+1;
+      const index= cards.findIndex((el) => el.id === this.state.rCard.id)+1;
+      alert(index);
+      cards.splice(index,0,{ id: cardNumber-1, value: "L" + (cardNumber-1), textFieldValue:'' });
       file.cards=cards;
       files.splice(this.state.currentFile,1,file);
       this.setState({ cardNumber, files });
@@ -104,7 +110,7 @@ handleClickOutside=(event) => {
   const recentCard= card.id;
   //recentCard=event.target.id;
   //alert(recentCard);
-  this.setState({recentCard});
+  this.setState({recentCard, rCard:card});
   
  }
   
