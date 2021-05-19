@@ -99,7 +99,7 @@ handleClickOutside=(event) => {
       //console.log(this.state.rCard);
       //const index = cards.indexOf(this.state.rCard)+1;
       const index= cards.findIndex((el) => el.id === this.state.rCard.id)+1;
-      alert(index);
+      //alert(index);
       cards.splice(index,0,{ id: cardNumber-1, value: "L" + (cardNumber-1), textFieldValue:'' });
       file.cards=cards;
       files.splice(this.state.currentFile,1,file);
