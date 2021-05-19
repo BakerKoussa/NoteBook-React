@@ -103,7 +103,7 @@ handleClickOutside=(event) => {
  handleVist = (card) => {
   const recentCard= card.id;
   //recentCard=event.target.id;
-  alert(recentCard);
+  //alert(recentCard);
   this.setState({recentCard});
   
  }
