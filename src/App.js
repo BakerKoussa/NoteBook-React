@@ -28,20 +28,18 @@ class App extends Component {
     cardNumber: 1,
     currentFile:0
   };
-
-  deleteHandler = (counterId) => {
-    const counters = this.state.counters.filter((c) => c.id !== counterId);
-    this.setState({ counters });
+  
+  deleteHandler = (cardId) => {
+    
+    const files = [...this.state.files];
+    files[this.state.currentFile].cards=files[this.state.currentFile].cards.filter((c)=> c.id !==cardId);
+    this.setState({ files });
   };
-  resetHandler = () => {
-    const counters = this.state.counters.map((c) => {
-      c.value = 0;
-      return c;
-    });
-    this.setState({ counters });
-  };
-
-
+  resetHandler = (cardId) => {
+    const files = [...this.state.files];
+    files[this.state.currentFile].cards[cardId-1].textFieldValue="";
+    this.setState({ files });
+  }; si
 
   pageHandeler = (page) => {
     this.setState({ currentPage: page });
@@ -82,6 +80,21 @@ class App extends Component {
   }
 };
 
+handleClickOutside=(event) => {
+  if (event.target.id==="Notebody") {
+    const files = [...this.state.files];
+    const file = files[this.state.currentFile];
+    const cards = [...this.state.files[this.state.currentFile].cards];
+    const card=cards[cards.length-1];
+    const cardNumber = cards.length;
+    files[this.state.currentFile].cards.push({ id: cardNumber, value: "L" + (cardNumber) });
+    
+    this.setState({files});
+      //alert(event.target.id);
+  }
+};
+
+  
   render() {
     const {
       pageSize,
@@ -90,6 +103,7 @@ class App extends Component {
       currentFile
     } = this.state;
     const cards = paginate(files[currentFile].cards, currentPage, pageSize);
+    document.addEventListener('mousedown', this.handleClickOutside)
     return (
       <React.Fragment>
         <NavBar
@@ -99,7 +113,7 @@ class App extends Component {
           <div className="col-2">
             <SideBar files ={ files} currentFile = {currentFile} onFileChange = {this.fileHandler}/>
           </div>
-          <div className="col">
+          <div className="col" id={"Notebody"}>
 
 
             {cards.map((card) => (
