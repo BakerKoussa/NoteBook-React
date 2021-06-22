@@ -40,7 +40,10 @@ class App extends Component {
 
   resetHandler = (cardId) => {
     const files = [...this.state.files];
-    files[this.state.currentFile].cards[cardId].textFieldValue="";
+    files[this.state.currentFile].cards.map((c)=>{
+      if(c.id==cardId)
+      c.textFieldValue="";
+    });
     this.setState({ files });
   }; 
 
